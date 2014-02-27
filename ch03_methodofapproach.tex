@@ -1,0 +1,150 @@
+%
+% $Id: ch03_thework.tex
+%
+%   *******************************************************************
+%   * SEE THE MAIN FILE "AllegThesis.tex" FOR MORE INFORMATION.       *
+%   *******************************************************************
+%
+\chapter{Implementing the System} \label{ch:method}
+The system is implemented using version 7 of the Java programming language using version 21 of the Evolutionary Computation for Java (ECJ) framework. \textit{EnergyPlus} version 8.1 is used for simulating energy usage of the buildings. The implementation was done on Mac OSX 10.9 and Debian Linux version 7.0 running on the Google Compute Engine cloud platform.
+
+\section{Formulating the system}
+
+The two objective functions are:
+\begin{itemize}
+\item Minimizing the total energy usage. This includes the total electricity usage for a year as well as energy used for heating.
+\item Minimizing the associated lifecycle cost. This includes the costs associated with making construction (i.e. material and labor costs) as well as the cost of operation.
+
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+    Variable name                  & Type       & Unit                      \\ \hline
+    Window glazing Material        & Discrete   & N/A                      \\
+    R Value of Insulation Material & Discrete   & m\textsuperscript{2}K/W   \\ \hline
+    \end{tabular}
+    \caption{Building envelope variables }
+    \label{table:envelope}
+\end{table}
+
+\end{itemize}
+
+There are 5 different building variables that comprise the chromosome for an individual building in the system. These can be classified into two main categories\textemdash building envelope related, and HVAC system related. Building envelope system related variable include window glazing material, window sizes, and insulation material used (Table. \ref{table:envelope}). Glazing type is chosen from a set from the set of five commonly used types as specified by the Energy Information Administration (Table. \ref{table:glazing}). All insulation materials that come bundled with \textit{EnergyPlus} are supported. The costs are determined using data from the Energy Information Administration \cite{eia}. The HVAC system related variables include the HVAC system type (Table. \ref{table:havc_type}), and heating and cooling set points (Table. \ref{table:hvac}).
+
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{|l|}
+    \hline
+    Glazing Type             \\ \hline
+    Gas-fills                 \\
+    Heat absorbing             \\
+    Low emissivity coatings     \\
+    Reflexive coatings           \\
+    Spectrally selective coatings \\ \hline
+    \end{tabular}
+    \caption{Glazing type for windows}
+    \label{table:glazing}
+\end{table}
+
+
+The building variables were chosen on the basis of a number of factors. First, they had to be supported by \textit{EnergyPlus} as otherwise their effect cannot be quantized during fitness evaluation. Next, the variables had to serve a practical purpose. For instance, while building orientation and shape can influence energy efficiency, it is unlikely that they can be changed (unless one is designing a new building from scratch). Similarly, \textit{EnergyPlus} supports district heating as a HVAC system type. However, it is not feasible to implement such as system since they are implemented on a community scale. Finally, the variables had to have been used in a recent related work and have had a non-negligible impact in the results of those studies. Magnier et al. \cite{Magnier2010} have used heating and cooling set points as well as window glazing materials while Peji\v{c}i\'{c} et al. \cite{Pejicic2012} have used insulation materials for walls. While the type of HVAC system has not been used in any of these studies, my hypothesis is that switching to more efficient HVAC systems will have a significant change in the overall energy use of a building.
+
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+    Variable name                  & Type       & Unit                      \\ \hline
+    Heating Set Point              & Continuous & $^{\circ}$C                       \\
+    Cooling Set Point              & Continuous & $^{\circ}$C                       \\
+    HVAC System Type               & Discrete   & N/A                        \\ \hline
+    \end{tabular}
+    \caption{HVAC System variables }
+    \label{table:hvac}
+\end{table}
+
+%Table for insulation materials
+
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{|l|}
+    \hline
+    Name                \\ \hline
+    Furnace             \\
+    Heat Pump            \\
+    Central Boiler        \\
+    Packaged Unit          \\ \hline
+    \end{tabular}
+    \caption{HVAC System Types}
+    \label{table:havc_type}
+\end{table}
+
+
+% \begin{algorithm}[htbp]
+%  %\SetLine % For v3.9
+%  \SetAlgoLined % For previous releases [?]
+%  \KwData{this text}
+%  \KwResult{how to write algorithm with \LaTeX2e }
+%  initialization\;
+%  \While{not at end of this document}{
+%   read current\;
+%   \eIf{understand}{
+%    go to next section\;
+%    current section becomes this one\;
+%    }{
+%    go back to the beginning of current section\;
+%   }
+%  }
+%  \caption{How to write algorithms (from \cite{Fiori:2013})}
+% \label{widgmin}
+% \end{algorithm}
+
+\section{Fitness Evaluation using {\it EnergyPlus}}
+
+Energy simulation for the building is a central part of the fitness evaluation. \textit{EnergyPlus} is a building energy simulation program developed by the US Department of Energy (DOE) that can be used for energy analysis and building load simulation. According to the product website \cite{eplus}:
+\begin{quote}
+Based on a user's description of a building from the perspective of the building's physical make-up and associated mechanical and other systems, \textit{EnergyPlus} calculates heating and cooling loads necessary to maintain thermal control set points, conditions throughout a secondary HVAC system and coil loads, and the energy consumption of primary plant equipment. 
+\end{quote}
+\textit{EnergyPlus} version 8.0 is used in the project for running annual energy simulation for each individual building in a population. The simulation is run using a time step of 15 minutes as this is the minimum that the \textit{EnergyPlus} documentation recommends. \textit{EnergyPlus}, by default, is a command line based program that uses a text based IDF file for input and can produce output in many different formats including HTML and CSV. A number of plugins are also available that add a graphical user interface.
+
+Initially the building to be optimized is modeled in OpenStudio, a free plugin for \textit{EnergyPlus} with a graphical user interface. The resulting text based IDF file is modified by ECJ during runtime and used by \textit{EnergyPlus} to run the simulations. The output is produced in the form of a comma separated value (CSV) file that lists the annual as well as monthly energy and electricity consumption in Joules. This information is used by ECJ to determine the fitness value for the individual building. A single building simulation in \textit{EnergyPlus} can take between 15 seconds to more than a minute. The difference is a result of the complexity of the building design being used. A sample simulation building with  3 floors divided into 3 zones with a fully configured HVAC system as well as solar panels took 70 seconds to run. Using this time as an average, an optimization using a population of 20 and 100 generations would take approximately 39 hours to run.
+
+\section{Extending ECJ}
+
+The ECJ implementation of the NSGA-II algorithm as well as that of the selection, mutation, and crossover operations are used in the system. Individuals are represented using ECJ's \texttt{DoubleVectorIndividual} as arrays of \texttt{double}s. The population size, number of generations, crossover and mutation types can be specified using a text based parameter file (\ref{table:params}). The range for each building variable (gene) can also be specified using the parameter file. 
+
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{|l|l|}
+    \hline
+    Parameter Name                 & Values  \\ \hline
+    Population size                & Integer Value (usually between 50 and 100) \\
+    Number of generations          & Integer Value \\
+    Crossover type                 & One point, Two point, Simulated binary, or Uniform \\ 
+    Mutation type                  & Uniform, Gaussian, or Polynomial \\
+    Selection type                 & Tournament, Roulette, Random, or Best \\ \hline
+    \end{tabular}
+    \caption{Genetic Algorithm Parameters supported by the system}
+    \label{table:params}
+\end{table}
+
+A custom fitness evaluation method was created by implementing the \\
+\texttt{ec.simple.SimpleProblemForm} interface and extending the \texttt{ec.Problem} class. The \texttt{evaluate} method in this class reads in an \texttt{Individual} among other parameters. The genome for the \texttt{Individual} is used to modify the input file for \textit{EnergyPlus}. The modified input file is then used to run the annual energy usage simulation for the building. The output from the simulation i.e. the total electricity and the total energy from natural gas is used to assign the fitness value for each objective. The energy usage objective is assigned the total energy usage for the year. The associated cost is calculated by multiplying the electricity and natural gas usage numbers by their respective rates. The rates are assigned from the data provided by the Energy Information Administration \cite{eia}. 
+
+The fitness evaluation is carried out in parallel using ECJ's in-built distributed master slave evaluation model from the \texttt{ec.eval} package. This model consists of one master node along with a number of slave nodes. The master node handles the evolutionary process and sends the individuals to be evaluated at the various slave nodes. As with the rest of the system, the parameters for this module is also specified in a parameter file. These parameters include the IP address for the master node, the number of jobs to be shipped to a slave at once, the number of jobs per slave among others as shown in Table \ref{table:dist_param}. Currently, the system is set up on f1-micro instances of the Google Compute Engine cloud platform. There are 12 slave nodes and 1 master node all running Debian Linux version 7.0. This can easily be changed to any other network by just modifying the IP addresses in the parameters file.
+
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{|l|}
+    \hline
+    Parameter Name                  \\ \hline
+    Master IP address               \\
+    Master port number               \\
+    Job size for shipping             \\
+    Number of jobs per slave           \\
+    Slave name              \\ \hline
+    \end{tabular}
+    \caption{Parameters for distributed evaluation}
+    \label{table:dist_param}
+\end{table}
+
+
