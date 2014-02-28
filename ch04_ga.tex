@@ -6,7 +6,49 @@
 %   *******************************************************************
 %
 \chapter{Genetic Algorithms}\label{ch:ga}
-\section{Importance of Energy Efficiency} \label{sec:motivation}
+Encoding
+* Binary
+* Permutation
+* Value
+* Tree
+
+Elitism
 \section{Genetic Operators} \label{sec:operators}
-\section{Importance of Energy Efficiency} \label{sec:moga}
+
+\subsection{Selection}
+The selection operator chooses the individual genomes that will undergo cross-over. The most popular selection methods are:
+\begin{itemize}
+\item Roulette Wheel : Each genome is assigned a fitness value and the probability of selection of a genome is proportional to its fitness. 
+\item Tournament : A tournament consists of a predetermined number of randomly chosen individuals. The entire solution space is divided into tournaments and the individual with the best fitness in each genome is chosen.
+\item Best
+\item Random
+\end{itemize}
+
+\subsection{Crossover}
+ The crossover operator is used to produce children solution from the parents selected by the selection operator. It is analogous to biological reproduction. The main types of crossover are: 
+\begin{itemize}
+\item One Point : A crossover point is selected on both parents. All data beyond that point is swapped in both parents producing two children. 
+\item Two Point : Two crossover points are selected on both parents. All data within the two points is swapped producing two children.
+\item Uniform : Individual genes are compared between two parents and swapped with a fixed probability. 
+\end{itemize}
+
+\subsection{Mutation}
+The mutation operator is used in the evolution process to randomly change the offspring produced through crossover. It is analogous to biological mutation and alters one or more gene values from in a chromosome from its initial state. Mutation is needed to ensure that not all solutions fall within the local optimum of the problem.Mutation occurs during evolution according to a user defined probability. Usually a low value is used as otherwise the algorithm will turn into a random search algorithm.
+There are 3 popular kinds of mutation:
+
+\begin{itemize}
+\item Flip Bit : This operator takes the chosen gene and inverses the bits (1 to 0 and 0 to 1). This is only applicable for binary genes.
+\item Boundary : This operator replaces the value of the chosen gene with either the upper or lower bound for that gene (chosen randomly). This mutation operator can only be used for integer and float genes.
+\item Non-uniform : 
+\item Uniform : NEED THIS
+\item Gaussian : NEED THIS
+\end{itemize}
+
+\section{Multi Objective Genetic Algorithms}
 \section{NSGA-II} \label{sec:nsga}
+The Non-dominated sorting Genetic Algorithm was designed by Kalyanmoy Deb et al. in their 2002 paper. The main features of NSGA are: NSGA-II has a fast computational complexity of $O(MN^2)$ where $M$ is the number of objective functions and $N$ is the population size, . NSGA-II incorporates elitism which has been shown to improve performance of a GA significantly <CITE>. The two distinguishing features of the NSGA-II algorithm are its fast non-dominated sorting approach and diversity preservation using a crowd comparison operator. <What is non-dominated?> The next paragraph describes these two features in detail.
+
+The non-domination sorting algorithm devised by Deb et al. takes only $O(MN^2)$ comparisons as opposed to a naive implementation that requires $O(MN^3)$ comparisons. Their algorithm calculates the number of solutions that dominate a particular solution and the set of solutions that the same solution dominates for each solution in a population. 
+
+\subsection{Simulated Binary Cross-over}
+\subsection{Polynomial Mutation}

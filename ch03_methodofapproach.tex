@@ -13,7 +13,7 @@ The system is implemented using version 7 of the Java programming language using
 The two objective functions are:
 \begin{itemize}
 \item Minimizing the total energy usage. This includes the total electricity usage for a year as well as energy used for heating.
-\item Minimizing the associated lifecycle cost. This includes the costs associated with making construction (i.e. material and labor costs) as well as the cost of operation.
+\item Minimizing the associated life cycle cost. This includes the costs associated with making construction (i.e. material and labor costs) as well as the cost of operation.
 
 \begin{table}[htbp]
     \centering
@@ -128,7 +128,7 @@ The ECJ implementation of the NSGA-II algorithm as well as that of the selection
 \end{table}
 
 A custom fitness evaluation method was created by implementing the \\
-\texttt{ec.simple.SimpleProblemForm} interface and extending the \texttt{ec.Problem} class. The \texttt{evaluate} method in this class reads in an \texttt{Individual} among other parameters. The genome for the \texttt{Individual} is used to modify the input file for \textit{EnergyPlus}. The modified input file is then used to run the annual energy usage simulation for the building. The output from the simulation i.e. the total electricity and the total energy from natural gas is used to assign the fitness value for each objective. The energy usage objective is assigned the total energy usage for the year. The associated cost is calculated by multiplying the electricity and natural gas usage numbers by their respective rates. The rates are assigned from the data provided by the Energy Information Administration \cite{eia}. 
+\texttt{ec.simple.SimpleProblemForm} interface and extending the \texttt{ec.Problem} class. The \texttt{evaluate} method in this class reads in an \texttt{Individual} among other parameters. The genome for the \texttt{Individual} is used to modify the input file for \textit{EnergyPlus}. The modified input file is then used to run the annual energy usage simulation for the building. The output from the simulation i.e. the total electricity and the total energy from natural gas is used to assign the fitness value for each objective. The energy usage objective is assigned the total energy usage for the year. The associated cost is calculated by multiplying the electricity and natural gas usage numbers by their respective average rates for the year 2013 for the state of Pennsylvania. The rates are assigned from the data provided by the Energy Information Administration \cite{eia}. 
 
 The fitness evaluation is carried out in parallel using ECJ's in-built distributed master slave evaluation model from the \texttt{ec.eval} package. This model consists of one master node along with a number of slave nodes. The master node handles the evolutionary process and sends the individuals to be evaluated at the various slave nodes. As with the rest of the system, the parameters for this module is also specified in a parameter file. These parameters include the IP address for the master node, the number of jobs to be shipped to a slave at once, the number of jobs per slave among others as shown in Table \ref{table:dist_param}. Currently, the system is set up on f1-micro instances of the Google Compute Engine cloud platform. There are 12 slave nodes and 1 master node all running Debian Linux version 7.0. This can easily be changed to any other network by just modifying the IP addresses in the parameters file.
 
