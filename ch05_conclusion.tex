@@ -11,6 +11,19 @@
 \section{Summary of Results}
 
 \section{Threats to validity}
+\begin{itemize}
+	\item Inaccurate thermal modeling of case-study building
+	\item Energy consumption for building as reported by EnergyPlus not verified with actual consumption records
+	\item Weather file for Meadville PA not found in the NREL database. Using Erie/Pittsburgh instead.
+	\item Cost is based on energy rates for only one year. 
+\end{itemize}
 
 \section{Future Work}
 
+\begin{itemize}
+	\item Expanding building variables.
+	\item Life cycle study -> considering life cycle energy impact of the building materials
+	\item Modularizing the system. Ability for user to choose variables etc.
+	\item Improving the cost function to include rates of change in natural gas/electricity/labor prices. Amortized payment over a period of time.
+	\item Closer integration with OpenStudio using their Ruby user scripts.
+\end{itemize}
