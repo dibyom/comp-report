@@ -25,7 +25,7 @@
 
 Energy usage has been continuously increasing since the dawn of the industrial age. In the last 40 years, energy usage globally has risen by approximately 70 percent according to a 2010 World Resources Institute Report. Even more recently, the 2013 International Energy Outlook report projects a 56 percent increase in energy consumption in the next 30 years \cite{ieo2013}. Fossil fuels supply about 80 percent of the world's energy needs with coal and oil together accounting for the vast majority of the number \cite{ipcc}. Rising energy use leads to an increase in greenhouse gas emissions from fossil fuels which further leads to an increase in chances of climate change. The 2007 IPCC report on climate change states that fossil fuels are responsible for 85 percent of human generated CO\textsubscript{2} emissions. This figure is stated to increase by another 62 percent by 2030 from 2002 levels.
 
-Energy efficiency, i.e., delivering the same (or more) services for less energy, is one of the quickest and cheapest ways to increase the amount of energy available for use. The European Council for an Energy Efficient Economy describes energy efficiency  as the `cornerstone of a sustainable society' \cite{ecees}.A large share of the energy supply has to come from renewable energy sources such as wind and solar power in order to comply with international treaties such as the Kyoto Protocol. However, with increasing energy demand, the development of renewables needs to be supplemented with energy efficiency.
+Energy efficiency, i.e., ``delivering the same (or more) services for less energy'' \cite{epa}, is one of the quickest and cheapest ways to increase the amount of energy available for use. The European Council for an Energy Efficient Economy describes energy efficiency  as the `cornerstone of a sustainable society' \cite{ecees}.A large share of the energy supply has to come from renewable energy sources such as wind and solar power in order to comply with international treaties such as the Kyoto Protocol. However, with increasing energy demand, the development of renewables needs to be supplemented with energy efficiency.
 
 From an environmental perspective, an obvious benefit to energy efficiency is 
 the reduction in the amount of greenhouse gas emissions. Reduction in greenhouse gas emissions can help with  improving urban air quality, reducing acid rain, and reducing eutrophication (i.e. an increase in the concentration of nutrients in water that promotes excessive algae growth) \cite{ecees}. There are economic benefits to energy efficiency as well. According to the Department of Energy's Energy Efficiency and Renewable Energy program, Americans saved \$7 billion on residential energy bills in 2004 from energy saving measures and by building energy efficient homes \cite{wri}. Increased energy efficiency contributes to energy security by making a country less dependent on imported non-renewable energy sources and thereby making it more competitive in the globalized world.
@@ -64,8 +64,7 @@ Genetic algorithms (GAs) are a form of random optimization methods that seek to 
 \end{figure}
 
 
-The general advantages of using genetic algorithms for optimization problems are all relevant in the case of energy optimization for buildings. GAs do not 
-require a knowledge of the mathematical structure of the problem. A GA search is not limited to a local optimum \cite{Pernodet2009}. Further, multi-objective GAs such as the non-dominated sorting genetic algorithm (NSGA-II) produce Pareto optimal solutions. A solution is Pareto optimal if a decrease in one objective cannot happen without an increase in at least one other objective \cite{Deb2002}\cite{Pernodet2009}. For a problem with two objectives (such as energy consumption and cost), the result is a curve of Pareto solutions instead of just one solution. This allows us to obtain a whole set of solutions from which we can then choose (Fig.\ref{fig:pareto}). %Add more about MOGA%
+The general advantages of using genetic algorithms for optimization problems are all relevant in the case of energy optimization for buildings. GAs do not require a knowledge of the mathematical structure of the problem. A GA search is not limited to a local optimum \cite{Pernodet2009}. Further, multi-objective GAs such as the non-dominated sorting genetic algorithm (NSGA-II) produce Pareto optimal solutions. A solution is Pareto optimal (or non-dominated) if a decrease in one objective cannot happen without an increase in at least one other objective \cite{Deb2002}\cite{Pernodet2009}. For a problem with two objectives (such as energy consumption and cost), the result is a curve of Pareto solutions instead of just one solution. This allows us to obtain a whole set of solutions from which we can then choose (Fig.\ref{fig:pareto}). %Add more about MOGA%
 
 \begin{figure}[htbp]
 \centering
@@ -76,25 +75,5 @@ require a knowledge of the mathematical structure of the problem. A GA search is
 
 \section{Goals of the Project}\label{sec:goals}
 
-The aim of this proposed project is to use a genetic algorithm-based approach 
-to create a system for optimizing energy efficiency in a building. The system 
-will take in parameters needed to model the building design and output a set of Pareto optimal solutions. This will be a multi-objective optimization problem with two objectives\textemdash minimizing energy usage and minimizing associated cost. A multi-objective genetic algorithm, NSGA-II, will be used along with a building energy simulation program, EnergyPlus, for fitness evaluation. The following chapters outline genetic algorithm and the NSGA-II algorithm in detail, discuss some related work in the field, and explain the method of approach. I will also present the results of a case study of the system using Alden Hall, a building on the Allegheny College campus. Finally, I will discuss the results of the case study in context of other related work in the area.
+The aim of this proposed project is to use a genetic algorithm-based approach to create a system for optimizing energy efficiency in a building. The system will take in parameters needed to model the building design and output a set of Pareto optimal solutions. This will be a multi-objective optimization problem with two objectives\textemdash minimizing energy usage and minimizing associated cost. A multi-objective genetic algorithm, NSGA-II, will be used along with a building energy simulation program, EnergyPlus, for fitness evaluation. The next chapter provides a more detailed overview of genetic algorithms in general and NSGA-II in particular. The following chapter provides a comparative discussion of five studies specific to building optimization using genetic algorithms. Next, I will discuss the implementation details of this project and present a case study utilizing it. Finally, the conclusion will provide a summary of the goals achieved, describe threats to the validity of this project and list ways in which future work can extend the project. 
 
-
-% COMMENTED OUT NEXT FEW LINES TO SAVE SPACE; MAY PUT THEM BACK LATER
-%Following the concise statement of the thesis, some of the details can be
-%expanded.  
-%It is appropriate to
-%refer to some of the results in the introduction (which may 
-%mean going back and adding them to the introduction once the
-%research is completed). 
-%A senior thesis, or any research paper, is not a mystery 
-%novel---there is no need to keep the reader in suspense about what
-%has been accomplished.
-
-% \section{Thesis Outline}\label{sec:outline}
-% The introductory chapter usually concludes with a ``road map'' of the upcoming
-% chapters, e.g., ``Chapter \ref{ch:relatedwork} reviews a number of past approaches
-% to the problem and summarizes their strengths and weaknesses. Chapter 
-% \ref{ch:method} outlines the method of approach used to establish the
-% results.''

@@ -6,49 +6,72 @@
 %   *******************************************************************
 %
 \chapter{Genetic Algorithms}\label{ch:ga}
-Encoding
-* Binary
-* Permutation
-* Value
-* Tree
-
-Elitism
+    The The genetic algorithm (GA) is an adaptive heuristic based randomized search algorithm that is inspired by evolutionary processes such as natural selection and genetics. GAs were invented by John Holland in 1975 and are mainly used for optimization and search problems. A GA initially consists of a population of candidate solutions (called individuals) that are usually randomly generated. Each individual contains properties (akin to chromosomes) that can be modified by the genetic operators. Chromosomes were originally encoded as strings of bits (0s or 1s) by Holland. However, many other encodings have since been used. These include : 
+\begin{itemize}
+        \item []{\bf Permutation:} The chromosome represents a sequence in a string of numbers.
+        \item []{\bf Value:} The chromosome is represented as a sequence of values that could be anything from real numbers to characters to user defined objects.
+        \item []{\bf Tree:} The chromosome consists of a tree of some objects representing functions or commands in a programming language.\cite{}
+\end{itemize}
+    
+    A GA has to specify an objective or fitness function that calculates a numerical value for each individual solution that determines how well the particular solution solves the problem. The goal of the GA is, then, is to find solutions that minimize or maximize the fitness value for a given problem. The evolution loop of the GA consists of many generations. In each generation, the fitness of each individual in the population is calculated. The selection operator selects parents from the generation based on the fitness scores. The cross-over and mutation operators generate children solutions from the parents that are then used for the next generation. These operators are described in detail in next section. Some GAs include elitism i.e. some selected individuals from the parent generation is kept in the next generation. The GA stops when the stopping criteria is met. Usual stopping criteria include a generation limit (i.e. stop when the GA has run for a fixed number of generations) or a fitness limit i.e. an individual in the current generation has a fitness value better than or equal to a specified value. 
+    
+    %GA Pseudocode%
+    
 \section{Genetic Operators} \label{sec:operators}
 
-\subsection{Selection}
-The selection operator chooses the individual genomes that will undergo cross-over. The most popular selection methods are:
-\begin{itemize}
-\item Roulette Wheel : Each genome is assigned a fitness value and the probability of selection of a genome is proportional to its fitness. 
-\item Tournament : A tournament consists of a predetermined number of randomly chosen individuals. The entire solution space is divided into tournaments and the individual with the best fitness in each genome is chosen.
-\item Best
-\item Random
-\end{itemize}
+Holland's original GA had four main operators\textemdash selection, crossover, mutation, and inversion. Inversion is not widely used as a operator anymore. The others are described below:
 
-\subsection{Crossover}
- The crossover operator is used to produce children solution from the parents selected by the selection operator. It is analogous to biological reproduction. The main types of crossover are: 
-\begin{itemize}
-\item One Point : A crossover point is selected on both parents. All data beyond that point is swapped in both parents producing two children. 
-\item Two Point : Two crossover points are selected on both parents. All data within the two points is swapped producing two children.
-\item Uniform : Individual genes are compared between two parents and swapped with a fixed probability. 
+\begin{description}
+  \item[Selection] \hfill \\
+	The selection operator chooses the individual genomes that will undergo cross-over. The most popular selection methods are:
+	\begin{itemize}
+	\item Roulette Wheel : Each genome is assigned a fitness value and the probability of selection of a genome is proportional to its fitness. 
+	\item Tournament : A tournament consists of a predetermined number of randomly chosen individuals. The entire solution space is divided into tournaments and the individual with the best fitness in each genome is chosen.
+	\item Best : This selects the best available individuals as parents based on fitness value
+	\item Random : This selects parents randomly.
+	\end{itemize}
+  
+  \item[Crossover] \hfill \\
+  	The crossover operator is used to produce children solution from the parents selected by the selection operator. It is analogous to biological reproduction. The main types of crossover are: 
+	\begin{itemize}
+	\item One Point : A crossover point is selected on both parents. All data beyond that point is swapped in both parents producing two children. 
+	\item Two Point : Two crossover points are selected on both parents. All data within the two points is swapped producing two children.
+	\item Uniform : Individual genes are compared between two parents and swapped with a fixed probability. 
+	\end{itemize}
+  \item[Mutation] \hfill \\
+  	The mutation operator is used in the evolution process to randomly change the offspring produced through crossover. It is analogous to biological mutation and alters one or more gene values from in a chromosome from its initial state. Mutation is needed to ensure that not all solutions fall within the local optimum of the problem. Mutation occurs during evolution according to a user defined probability. Usually a low value is used as otherwise the algorithm will turn into a random search algorithm.
+	Some popular kinds of mutation are :
+	\begin{itemize}
+	\item Flip Bit : This operator takes the chosen gene and inverses the bits (1 to 0 and 0 to 1). This is only applicable for binary genes.
+	\item Boundary : This operator replaces the value of the chosen gene with either the upper or lower bound for that gene (chosen randomly). This mutation operator can only be used for integer and float genes.
+	\item Uniform :  The uniform operator replaces the value of a gene with a random value that is generated between user defined bounds.
 \end{itemize}
-
-\subsection{Mutation}
-The mutation operator is used in the evolution process to randomly change the offspring produced through crossover. It is analogous to biological mutation and alters one or more gene values from in a chromosome from its initial state. Mutation is needed to ensure that not all solutions fall within the local optimum of the problem.Mutation occurs during evolution according to a user defined probability. Usually a low value is used as otherwise the algorithm will turn into a random search algorithm.
-There are 3 popular kinds of mutation:
-
-\begin{itemize}
-\item Flip Bit : This operator takes the chosen gene and inverses the bits (1 to 0 and 0 to 1). This is only applicable for binary genes.
-\item Boundary : This operator replaces the value of the chosen gene with either the upper or lower bound for that gene (chosen randomly). This mutation operator can only be used for integer and float genes.
-\item Non-uniform : 
-\item Uniform : NEED THIS
-\item Gaussian : NEED THIS
-\end{itemize}
+\end{description}
 
 \section{Multi Objective Genetic Algorithms}
+GAs are not limited to simply one objective function. Many real world optimization problems require two or more objectives that are conflicting. Thus, trade offs need to be made among the objectives. Multi-objective genetic algorithms (MOGAs) minimize multiple objective functions subject to a set of constraints. Formally, MOGAs can be depicted as: 
+\begin{equation}
+min(f_1x), f_2(x), f_3(x), \ldots,f_k(x))
+\end{equation}
+where $k$ is the number of objectives, and $x \in X$, $X$ being the set of chromosomes (or decision variables) that is defined by constraints. It is not possible to find a single solution that optimizes all objectives simultaneously. Therefore, we instead find a set of Pareto optimal or non-dominated solutions. As defined in \ref{ch:intro}, a solution is non-dominated (or Pareto optimal) if if a decrease in one objective cannot happen without an increase in at least one other objective \cite{Deb2002}\cite{Pernodet2009}. Mathematically, for $k$ objectives, a solution $x_1$ is said to dominate $x_2$ if
+    \begin{equation}
+        f_i(x_1) \leq f_i(x_2) \forall i \in {1,2,\ldots,k}
+    \end{equation}
+
 \section{NSGA-II} \label{sec:nsga}
-The Non-dominated sorting Genetic Algorithm was designed by Kalyanmoy Deb et al. in their 2002 paper. The main features of NSGA are: NSGA-II has a fast computational complexity of $O(MN^2)$ where $M$ is the number of objective functions and $N$ is the population size, . NSGA-II incorporates elitism which has been shown to improve performance of a GA significantly <CITE>. The two distinguishing features of the NSGA-II algorithm are its fast non-dominated sorting approach and diversity preservation using a crowd comparison operator. <What is non-dominated?> The next paragraph describes these two features in detail.
-
-The non-domination sorting algorithm devised by Deb et al. takes only $O(MN^2)$ comparisons as opposed to a naive implementation that requires $O(MN^3)$ comparisons. Their algorithm calculates the number of solutions that dominate a particular solution and the set of solutions that the same solution dominates for each solution in a population. 
-
-\subsection{Simulated Binary Cross-over}
-\subsection{Polynomial Mutation}
+The Non-dominated sorting Genetic Algorithm was designed by Kalyanmoy Deb et al. and published in 2002. Deb et al. use NSGA-II on a number of case studies and find that it finds a much better "spread of solutions and better convergence near the true Pareto-optimal front as compared to other GAs such as the SPEA. The main features of NSGA are: 
+\begin{itemize}
+\item[] NSGA-II has a fast computational complexity of $O(MN^2)$ where $M$ is the number of objective functions and $N$ is the population size. Other multi-objective genetic algorithms such as the strength Pareto Evolutionary Algorithm (SPEA) have a complexity of $O(MN^3)$ \cite{Deb2002}.
+\item[] NSGA-II incorporates elitism which has been shown to improve performance of a GA significantly \cite{Deb2002}.
+\item[] Diversity of solutions in a population is ensured using a crowd comparison operator which alleviates the need for an external sharing parameter.
+\end{itemize}
+  The two distinguishing features of the NSGA-II algorithm are its fast non-dominated sorting approach and diversity preservation using a crowd comparison operator. NSGA-II sorts individuals into fronts (or ranks) based on their domination level.A non-dominated front (or Pareto front) is a set of solutions that are non-dominated (or Pareto optimal) \cite{Deb2002}. For each front, individuals in preceding fronts are ignored and the non-dominated front is calculated among the remaining solutions \cite{Deb2002}.A naive approach for sorting the solutions in fronts based on their domination level would involve comparing a solution with every other solution resulting in $O(MN^2)$ comparisons for each front and $O(MN^3)$ comparisons for generating all $N$ fronts (with $M$ denoting the number of objective functions and $NN$ the population size). Deb et al. use a novel approach that involves, for a solution $x$, the calculation of the domination count, the number of solutions that dominate a particular solution and a set of solutions that $x$ itself dominates \cite{Deb2002}. The process requires $O(MN^2)$ comparisons. The trade-off here is that the naive approach requires $O(N)$ space while Deb et al. 's approach has $O(N^2)$ space complexity.
+  
+  The crowd comparison operator is used for preserving diversity among individuals in a population. It is a faster alternative to the sharing variable approach to diversity preservation that is used by other multi-objective genetic algorithms such as the original NSGA \cite{Deb2002}. First, the algorithm estimates the density of solutions surrounding a solution by calculating Euclidean distances for each objective \cite{Deb2002}. The crowd-distance value is the sum of the individual values for each objective. The crowd comparison operator is then used to select a diverse non-dominated (or Pareto optimal) front \cite{Deb2002}. This operator prefers the individual with the lower rank when comparing two individuals in different ranks. Between two individuals in the same front, the one located in a lesser crowded region gets precedence \cite{Deb2002}.
+  
+  As with many other GAs, the first step in the algorithm is generating a random parent population that is then sorted based on non-domination \cite{Deb2002}. For all generations besides the first, the main loop first creates a population of $2N$ by combining the population of the previous and current generations to ensure elitism. The combined population is sorted by non-domination rank. The new population is created by adding individuals in the order of their ranks. To select exactly $N$ individuals, the crowd comparison operator is used in the last rank to be included in the new population \cite{Deb2002}.
+  
+  For real coded chromosomes, Deb et al. use a simulated binary crossover (SBX) and polynomial mutation operators instead of other traditional ones \cite{Deb2002}. Other studies have empirically proven that these operators deliver better results when real encoded individuals \cite{agrawal1994}. Simulated binary crossover, as the name suggests, simulates the effect of a crossover operation in a binary encoded GA on a real encoded GA. In doing so, it overcomes many of the shortcomings of other crossover operators for real coded GAs \cite{agrawal1994} and provides a search power similar to that of a crossover operation in a binary coded GA. Search power, here, is defined in terms of ``the problitiy of creating an arbitrary child solution from a given pair of parent solutions'' \cite{agrawal1994}. SBX uses a probability distribution function along with a user defined function called the peakedness of the distributions \cite{bandaru2011}. Analogous to SBX, the polynomial mutation operator simulates the children distribution of bit-flip mutation in binary encoded GAs on real valued chromosomes \cite{bandaru2011}. This again includes a user defined parameter that helps to generate children that are far off from the parent in real encoded GAs \cite{bandaru2011}.
+  
+  %Equations for SBX and PM?%
+  
